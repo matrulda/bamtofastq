@@ -590,9 +590,9 @@ process multiqc {
 workflow.onComplete {
 
     // Set up the e-mail variables
-    def subject = "[nf-core/bamtofastq] Successful: $workflow.runName"
+    def subject = "[qbic-pipelines/bamtofastq] Successful: $workflow.runName"
     if (!workflow.success) {
-      subject = "[nf-core/bamtofastq] FAILED: $workflow.runName"
+      subject = "[qbic-pipelines/bamtofastq] FAILED: $workflow.runName"
     }
     def email_fields = [:]
     email_fields['version'] = workflow.manifest.version
@@ -624,12 +624,12 @@ workflow.onComplete {
         if (workflow.success) {
             mqc_report = multiqc_report.getVal()
             if (mqc_report.getClass() == ArrayList) {
-                log.warn "[nf-core/bamtofastq] Found multiple reports from process 'multiqc', will use only one"
+                log.warn "[qbic-pipelines/bamtofastq] Found multiple reports from process 'multiqc', will use only one"
                 mqc_report = mqc_report[0]
             }
         }
     } catch (all) {
-        log.warn "[nf-core/bamtofastq] Could not attach MultiQC report to summary email"
+        log.warn "[qbic-pipelines/bamtofastq] Could not attach MultiQC report to summary email"
     }
 
     // Check if we are only sending emails on failure
@@ -661,11 +661,11 @@ workflow.onComplete {
           if ( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
           // Try to send HTML e-mail using sendmail
           [ 'sendmail', '-t' ].execute() << sendmail_html
-          log.info "[nf-core/bamtofastq] Sent summary e-mail to $email_address (sendmail)"
+          log.info "[qbic-pipelines/bamtofastq] Sent summary e-mail to $email_address (sendmail)"
         } catch (all) {
           // Catch failures and try with plaintext
           [ 'mail', '-s', subject, email_address ].execute() << email_txt
-          log.info "[nf-core/bamtofastq] Sent summary e-mail to $email_address (mail)"
+          log.info "[qbic-pipelines/bamtofastq] Sent summary e-mail to $email_address (mail)"
         }
     }
 
